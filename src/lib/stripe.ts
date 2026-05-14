@@ -1,8 +1,10 @@
 import Stripe from 'stripe'
 
-// Elimina BOM (U+FEFF) y espacios que PowerShell puede añadir a las env vars
+// Elimina BOM (U+FEFF=65279) y espacios que PowerShell añade a las env vars
 function cleanEnv(value: string | undefined): string {
-  return (value ?? '').replace(/^﻿/, '').trim()
+  let v = (value ?? '').trim()
+  while (v.charCodeAt(0) === 65279) v = v.slice(1)
+  return v.trim()
 }
 
 let _stripe: Stripe | null = null
