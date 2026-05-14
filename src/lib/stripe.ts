@@ -1,10 +1,15 @@
 import Stripe from 'stripe'
 
+// Elimina BOM (U+FEFF) y espacios que PowerShell puede añadir a las env vars
+function cleanEnv(value: string | undefined): string {
+  return (value ?? '').replace(/^﻿/, '').trim()
+}
+
 let _stripe: Stripe | null = null
 
 export function getStripe(): Stripe {
   if (!_stripe) {
-    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    _stripe = new Stripe(cleanEnv(process.env.STRIPE_SECRET_KEY), {
       apiVersion: '2026-04-22.dahlia',
     })
   }
@@ -15,7 +20,7 @@ export const PLANS = {
   basic: {
     name: 'Básico',
     price: 19,
-    priceId: process.env.STRIPE_PRICE_BASIC!,
+    priceId: cleanEnv(process.env.STRIPE_PRICE_BASIC),
     features: [
       '1 página de negocio',
       'Subdominio instaweb.es',
@@ -27,7 +32,7 @@ export const PLANS = {
   pro: {
     name: 'Pro',
     price: 29,
-    priceId: process.env.STRIPE_PRICE_PRO!,
+    priceId: cleanEnv(process.env.STRIPE_PRICE_PRO),
     features: [
       'Todo lo del Básico',
       'Dominio propio incluido',
@@ -39,7 +44,7 @@ export const PLANS = {
   negocio: {
     name: 'Negocio',
     price: 49,
-    priceId: process.env.STRIPE_PRICE_NEGOCIO!,
+    priceId: cleanEnv(process.env.STRIPE_PRICE_NEGOCIO),
     features: [
       'Todo lo del Pro',
       'Hasta 3 páginas',
