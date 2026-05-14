@@ -7,7 +7,6 @@ const font = Plus_Jakarta_Sans({ subsets: ['latin'], weight: ['400', '500', '600
 export const metadata: Metadata = {
   title: 'Instaweb — Tu negocio en internet en 5 minutos',
   description: 'Crea la página web de tu negocio local en 5 minutos. Sin técnicos, sin contratos largos. Desde 19€/mes.',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
