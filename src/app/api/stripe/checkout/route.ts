@@ -42,6 +42,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
+  // Limpiar BOM de APP_URL
+  let appUrl = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://instaweb-theta.vercel.app').trim()
+  while (appUrl.charCodeAt(0) === 65279) appUrl = appUrl.slice(1)
+  appUrl = appUrl.trim()
+
   // Crear sesión de Stripe
   const session = await getStripe().checkout.sessions.create({
     payment_method_types: ['card'],
@@ -49,8 +54,8 @@ export async function POST(req: NextRequest) {
     line_items: [{ price: selectedPlan.priceId, quantity: 1 }],
     customer_email: businessData.owner_email,
     metadata: { business_id: business.id, slug },
-    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=1&slug=${slug}`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/nuevo?step=3`,
+    success_url: `${appUrl}/dashboard?success=1&slug=${slug}`,
+    cancel_url: `${appUrl}/nuevo?step=3`,
   })
 
   return NextResponse.json({ url: session.url })
